@@ -24,12 +24,12 @@ typedef struct {
 // it should return 0 if the address argument is valid (in the range 0 to 256*256-1)
 // and 1 otherwise
 int decodeAddress(int address, int *pageNumber, int *pageOffset){
-    if (address > 256 * (256 - 1) || address < 0) {
+    if (address > PAGE_SIZE * (PAGE_SIZE - 1) || address < 0) {
         return 1;
     }
     else {
-        *pageNumber = (address >> 8) & (256 - 1);
-        *pageOffset = address & (256 - 1);
+        *pageNumber = (address >> 8) & (PAGE_SIZE - 1);
+        *pageOffset = address & (PAGE_SIZE - 1);
     }
     return 0;
 }
@@ -43,8 +43,8 @@ int readFromBackingStore(FILE *fp, char *buffer, int pageNumber) {
         return 1;
     }
     else {
-        read_result = fread(buffer, sizeof(char), 256, fp);
-        if (read_result != 256) {
+        read_result = fread(buffer, sizeof(char), PAGE_SIZE, fp);
+        if (read_result != PAGE_SIZE) {
             return 1;
         }
         else {
